@@ -1,0 +1,257 @@
+/* ==============================
+   IMPORTAÇÃO DAS FONTES GOOGLE
+   ============================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Nunito:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
+
+@import "tailwindcss"; /* Importa todas as utilidades do TailwindCSS */
+
+/* ==============================
+   TIPOGRAFIA DO SISTEMA
+   ============================== */
+/* Fonte principal - Títulos e chamadas de impacto */
+.font-primary {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Fonte secundária - Subtítulos, legendas e botões */
+.font-secondary {
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Fonte de apoio - Textos longos e descrições */
+.font-body {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* ==============================
+   Paleta de cores personalizada (Lunysse)
+   ============================== */
+@theme {
+  --color-dark: #510993;       /* Indigo – profundidade e foco */
+  --color-medium: #6B39BC;     /* Grape – seriedade e acolhimento */
+  --color-light: #8569E4;      /* Medium Slate Blue – criatividade e clareza */
+  --color-accent: #A68CEE;     /* Tropical Indigo – confiança e leveza */
+  --color-background: #C7AFF7; /* Mauve – calma, equilíbrio */
+}
+
+/* ==============================
+   Classes utilitárias de cores
+   ============================== */
+/* Fundo */
+.bg-dark { background-color: var(--color-dark); }
+.bg-medium { background-color: var(--color-medium); }
+.bg-light { background-color: var(--color-light); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-background { background-color: var(--color-background); }
+
+/* Texto */
+.text-dark { color: var(--color-dark); }
+.text-medium { color: var(--color-medium); }
+.text-light { color: var(--color-light); }
+.text-accent { color: var(--color-accent); }
+
+/* Bordas */
+.border-dark { border-color: var(--color-dark); }
+.border-medium { border-color: var(--color-medium); }
+.border-light { border-color: var(--color-light); }
+.border-accent { border-color: var(--color-accent); }
+
+/* Ring (foco do Tailwind) */
+.ring-dark { --tw-ring-color: var(--color-dark); }
+.ring-medium { --tw-ring-color: var(--color-medium); }
+.ring-light { --tw-ring-color: var(--color-light); }
+.ring-accent { --tw-ring-color: var(--color-accent); }
+
+/* ==============================
+   Efeitos de hover (interação)
+   ============================== */
+/* Fundo ao passar mouse */
+.hover\:bg-dark:hover { background-color: var(--color-dark); }
+.hover\:bg-medium:hover { background-color: var(--color-medium); }
+.hover\:bg-light:hover { background-color: var(--color-light); }
+.hover\:bg-accent:hover { background-color: var(--color-accent); }
+
+/* Texto ao passar mouse */
+.hover\:text-dark:hover { color: var(--color-dark); }
+.hover\:text-medium:hover { color: var(--color-medium); }
+.hover\:text-light:hover { color: var(--color-light); }
+.hover\:text-accent:hover { color: var(--color-accent); }
+
+/* Bordas ao passar mouse */
+.hover\:border-dark:hover { border-color: var(--color-dark); }
+.hover\:border-medium:hover { border-color: var(--color-medium); }
+.hover\:border-light:hover { border-color: var(--color-light); }
+.hover\:border-accent:hover { border-color: var(--color-accent); }
+
+/* ==============================
+   Estilo global do body
+   ============================== */
+body {
+  font-family: 'Roboto', sans-serif; /* Fonte padrão para textos longos */
+  font-weight: 400; /* Peso normal */
+  background: linear-gradient(
+    135deg,
+    var(--color-light) 0%,         /* Começa Medium Slate Blue */
+    var(--color-medium) 50%,       /* Vai para Grape */
+    var(--color-background) 100%   /* Termina Mauve */
+  );
+  min-height: 100vh; /* Sempre ocupa altura mínima da tela */
+}
+
+/* Aplicando fontes nos elementos HTML */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif; /* Títulos com Poppins */
+}
+
+button, .btn, label {
+  font-family: 'Nunito', sans-serif; /* Botões e labels com Nunito */
+}
+
+p, span, div, article {
+  font-family: 'Roboto', sans-serif; /* Textos com Roboto */
+}
+
+/* ==============================
+   Efeito Glassmorphism
+   ============================== */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.85);         
+  backdrop-filter: blur(20px);                  
+  border-radius: 24px;                          
+  border: 1px solid rgba(255, 255, 255, 0.2);   
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.glassmorphism-light {
+  background: rgba(255, 255, 255, 0.12);        
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ==============================
+   Elementos decorativos de fundo
+   ============================== */
+.bg-decoration {
+  position: fixed;      
+  border-radius: 50%;   
+  filter: blur(40px);   
+  opacity: 0.3;         
+  z-index: -1;          
+}
+
+/* Bolha 1 */
+.bg-decoration-1 {
+  width: 300px;
+  height: 300px;
+  background: var(--color-accent);
+  top: 10%;
+  left: 10%;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Bolha 2 */
+.bg-decoration-2 {
+  width: 200px;
+  height: 200px;
+  background: var(--color-light);
+  top: 60%;
+  right: 15%;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+/* Bolha 3 */
+.bg-decoration-3 {
+  width: 150px;
+  height: 150px;
+  background: var(--color-medium);
+  bottom: 20%;
+  left: 20%;
+  animation: float 7s ease-in-out infinite;
+}
+
+/* ==============================
+   Animações
+   ============================== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
+.animate-fade-in-left { animation: fadeInLeft 0.6s ease-out; }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ==============================
+   Botões
+   ============================== */
+.btn-primary {
+  background: var(--color-light);
+  color: white;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background: var(--color-accent);
+  transform: scale(1.02);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-light);
+  transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  color: var(--color-medium);
+}
+
+/* ==============================
+   Campos de input
+   ============================== */
+.input-field {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--color-light);
+  box-shadow: 0 0 0 3px rgba(133, 105, 228, 0.2); /* Glow em roxo */
+}
+
+/* ==============================
+   Página mobile de redirecionamento
+   ============================== */
+.mobile-redirect {
+  background: var(--color-dark); 
+  color: white;                  
+  min-height: 100vh;             
+  display: flex;                 
+  align-items: center;           
+  justify-content: center;       
+  text-align: center;            
+  padding: 2rem;                 
+}
