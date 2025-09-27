@@ -31,20 +31,22 @@ const PatientInfo = ({ patient }) => {
             <p className="text-dark/60">Paciente #{patient.id}</p>
           </div>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {fields.map(({ icon: IconComponent, label, value, href, isStatus }) => (
-            <div key={label} className="flex items-center gap-3">
-              <IconComponent className="w-5 h-5 text-dark/60" />
-              <div>
-                <p className="text-sm text-dark/60">{label}</p>
+            <div key={label} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <IconComponent className="w-5 h-5 text-blue-600" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm text-gray-600">{label}</p>
                 {href ? (
-                  <a href={href} className="font-semibold text-dark hover:text-light transition-colors">{value}</a>
+                  <a href={href} className="font-semibold text-dark hover:text-light transition-colors text-sm sm:text-base truncate block">{value}</a>
                 ) : isStatus ? (
                   <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Ativo' || value === 'Em tratamento' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                   }`}>{value}</span>
                 ) : (
-                  <p className="font-semibold text-dark">{value}</p>
+                  <p className="font-semibold text-dark text-sm sm:text-base">{value}</p>
                 )}
               </div>
             </div>
@@ -112,16 +114,16 @@ const SessionForm = ({ data, onChange, onSubmit, onCancel, loading }) => {
 };
 
 const Header = ({ onBack, title }) => (
-  <div className="flex items-center gap-4">
+  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
     <Button 
       variant="secondary" 
       onClick={onBack} 
-      className="flex items-center gap-2 bg-white text-light hover:bg-gray-50 border border-gray-200"
+      className="flex items-center gap-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 w-fit"
     >
-      <ArrowLeft size={20} />
-      Voltar
+      <ArrowLeft size={18} />
+      <span className="hidden sm:inline">Voltar</span>
     </Button>
-    <h1 className="text-3xl font-bold text-white">{title}</h1>
+    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{title}</h1>
   </div>
 );
 
@@ -165,16 +167,16 @@ const SessionList = ({ sessions, onStatusUpdate, updatingSessions, navigate }) =
   return (
     <div className="space-y-4">
       {sessions.map(session => (
-        <div key={session.id} className="bg-white/50 rounded-lg border border-white/20 p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <p className="font-semibold text-dark">Sessão #{session.id}</p>
+        <div key={session.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                <p className="font-semibold text-dark text-sm sm:text-base">Sessão #{session.id}</p>
                 <select
                   value={session.status}
                   onChange={(e) => onStatusUpdate(session.id, e.target.value)}
                   disabled={updatingSessions.has(session.id)}
-                  className="px-2 py-1 text-xs font-medium border-0 rounded-full focus:ring-2 focus:ring-light bg-blue-100 text-blue-800"
+                  className="w-fit px-2 py-1 text-xs font-medium border border-gray-300 rounded-full focus:ring-2 focus:ring-light bg-blue-100 text-blue-800"
                 >
                   <option value="agendado">Agendado</option>
                   <option value="iniciado">Iniciado</option>
@@ -182,14 +184,14 @@ const SessionList = ({ sessions, onStatusUpdate, updatingSessions, navigate }) =
                   <option value="cancelado">Cancelado</option>
                 </select>
               </div>
-              <p className="text-sm text-dark/70 mb-2">
+              <p className="text-sm text-gray-600 mb-2">
                 {new Date(session.date).toLocaleDateString('pt-BR')} às {session.time}
               </p>
-              <p className="text-dark font-medium">{session.description}</p>
+              <p className="text-dark font-medium text-sm sm:text-base">{session.description}</p>
             </div>
             <button
               onClick={() => navigate(`/sessao/${session.id}`)}
-              className="p-2 text-dark/60 hover:text-dark transition-colors"
+              className="flex-shrink-0 p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
               title="Ver detalhes completos"
             >
               <Eye size={18} />

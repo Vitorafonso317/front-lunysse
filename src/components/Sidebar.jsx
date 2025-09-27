@@ -9,6 +9,7 @@ import { useState } from 'react'; // Hook para gerenciar estado local
 import { Link, useNavigate, useLocation } from 'react-router-dom'; // Hooks do React Router para navegação
 import { useAuth } from '../context/AuthContext'; // Contexto personalizado para autenticação
 import { Menu, X, LogOut, BarChart3, Calendar, User, Users, MessageCircle, Bell } from 'lucide-react'; // Ícones SVG
+import { ConfirmModal } from './ConfirmModal'; // Modal de confirmação
 
 export const Sidebar = () => {
   /* ==============================
@@ -16,6 +17,8 @@ export const Sidebar = () => {
      ============================== */
   // Estado para controlar se o menu mobile está aberto ou fechado
   const [isOpen, setIsOpen] = useState(false);
+  // Estado para controlar o modal de confirmação de logout
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   
   // Obtém dados do usuário logado e função de logout do contexto
   const { user, logout } = useAuth();
@@ -33,6 +36,7 @@ export const Sidebar = () => {
   const handleLogout = () => {
     logout(); // Limpa os dados do usuário do contexto
     navigate('/login'); // Redireciona para a página de login
+    setShowLogoutModal(false); // Fecha o modal
   };
 
   // Função que verifica se uma rota específica está ativa (sendo visualizada)
@@ -157,7 +161,7 @@ export const Sidebar = () => {
              ============================== */}
           <div className="p-4 border-t border-white/10">
             <button
-              onClick={handleLogout} // Executa função de logout
+              onClick={() => setShowLogoutModal(true)} // Abre modal de confirmação
               className="flex items-center space-x-3 w-full px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
             >
               <LogOut size={20} />
@@ -178,6 +182,17 @@ export const Sidebar = () => {
           onClick={() => setIsOpen(false)} // Fecha menu ao clicar no overlay
         />
       )}
+
+      {/* Modal de confirmação de logout */}
+      <ConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Confirmar Saída"
+        message="Deseja realmente sair do sistema?"
+        confirmText="Sim, sair"
+        cancelText="Cancelar"
+      />
     </>
   );
 };

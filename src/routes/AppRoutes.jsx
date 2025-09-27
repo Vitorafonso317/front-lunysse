@@ -30,6 +30,7 @@ import { Relatorios } from '../pages/Relatorios';
 import { Solicitacoes } from '../pages/Solicitacoes';
 import { Pacientes } from '../pages/Pacientes';
 import { PacienteDetalhes } from '../pages/PacienteDetalhe';
+import { SessaoDetalhes } from '../pages/SessaoDetalhes';
 
 /* ==============================
    Componente de rota protegida
@@ -43,8 +44,10 @@ const ProtectedRoute = ({ children }) => {
   return (
     <div className="min-h-screen flex bg-background">
       <Sidebar /> {/* Sidebar lateral sempre visível */}
-      <main className="flex-1 lg:ml-64 p-8">
-        {children} {/* Conteúdo da página protegida */}
+      <main className="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-8 max-w-full overflow-x-hidden">
+        <div className="max-w-7xl mx-auto">
+          {children} {/* Conteúdo da página protegida */}
+        </div>
       </main>
     </div>
   );
@@ -187,6 +190,11 @@ export const AppRoutes = () => {
           <Route path="/pacientes/:id" element={
           <ProtectedRoute>
             <PacienteDetalhes/>
+          </ProtectedRoute>
+        } />
+          <Route path="/sessao/:sessionId" element={
+          <ProtectedRoute>
+            <SessaoDetalhes/>
           </ProtectedRoute>
         } />
         
