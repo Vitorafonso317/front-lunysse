@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion';
 import { Heart, Brain, Shield, Star, User, Calendar } from 'lucide-react';
-import Banner from "../assets/Home/DecHome.png";
-import Dec1 from "../assets/Home/Home.png";
-import PsiHome1 from "../assets/Home/PsiHome.png"
-import ManHome from "../assets/Home/ManHome.png"
-import GirlHome from "../assets/Home/GirlHome.png"
-import PsiGirlHome from "../assets/Home/PsiGirlHome.png" 
-import PqTerapia from "../assets/Home/PqTerapia.png"
-import PessoasFelizes from "../assets/Home/PessoasFelizes.png"
-import Motivacao from "../assets/Home/Motivacao.png"
+import Banner from "../assets/Home/DecHome.jpg";
+import Dec1 from "../assets/Home/Home.jpg";
+import PsiHome1 from "../assets/Home/PsiHome.jpg"
+import ManHome from "../assets/Home/ManHome.jpg"
+import GirlHome from "../assets/Home/GirlHome.jpg"
+import PsiGirlHome from "../assets/Home/PsiGirlHome.jpg" 
+import PqTerapia from "../assets/Home/PqTerapia.jpg"
+import PessoasFelizes from "../assets/Home/PessoasFelizes.jpg"
+import Motivacao from "../assets/Home/Motivacao.jpg"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
