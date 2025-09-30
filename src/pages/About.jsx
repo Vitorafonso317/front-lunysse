@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Heart, Brain, Shield, Users, Calendar, Activity, FileText, Zap, Target, Award } from 'lucide-react';
 import { Card } from '../components/Card';
 
-import Misabout from "../assets/About/Misabout.png"; 
+import Misabout from "../assets/About/MisAbout.png"; 
 import VisAbout from "../assets/About/VisAbout.png";
 import ValAbout from "../assets/About/ValAbout.png";
 import FunAbout from "../assets/About/FunAbout.png";
