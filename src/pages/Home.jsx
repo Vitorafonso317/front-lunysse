@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Heart, Brain, Shield, Star, User, Calendar } from 'lucide-react';
-import Banner from "../assets/Home/DecHome.jpg";
 import Dec1 from "../assets/Home/Home.jpg";
 import PsiHome1 from "../assets/Home/PsiHome.jpg"
 import ManHome from "../assets/Home/ManHome.jpg"
