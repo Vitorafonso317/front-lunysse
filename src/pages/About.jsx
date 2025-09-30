@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Heart, Brain, Shield, Users, Calendar, Activity, FileText, Zap, Target, Award } from 'lucide-react';
 import { Card } from '../components/Card';
 
-import Misabout from "../assets/About/MisAbout.png"; 
+import MisAbout from "../assets/About/MisAbout.png"; 
 import VisAbout from "../assets/About/VisAbout.png";
 import ValAbout from "../assets/About/ValAbout.png";
 import FunAbout from "../assets/About/FunAbout.png";
@@ -114,7 +114,7 @@ export const About = () => {
               <Card className="p-8 h-full flex flex-col">
                 {/* IMAGEM: Ícone ou ilustração sobre missão */}
                 <div className="w-full h-32 mb-6">
-                  <img src={Misabout} alt="Nossa Missão" className="w-full h-full object-cover rounded-lg" />
+                  <img src={MisAbout} alt="Nossa Missão" className="w-full h-full object-cover rounded-lg" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4 tracking-tight">Nossa Missão</h2>
                 <p className="text-dark/80 leading-relaxed mb-4 font-light">
