@@ -46,14 +46,7 @@ export const Home = () => {
               ou uma ilustração representando bem-estar mental */}
         </motion.div>
 
-        <motion.img
-          src={Banner}
-          alt="decoração floral"
-          className="absolute bottom-0 right-0 object-contain opacity-90 pointer-events-none z-10"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-        />
+        
 
         <motion.img
           src={Dec1}
