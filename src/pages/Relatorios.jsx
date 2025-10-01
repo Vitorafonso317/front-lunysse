@@ -13,11 +13,15 @@ export const Relatorios = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [reportsData, setReportsData] = useState(null);
+  const [originalData, setOriginalData] = useState(null);
+  const [patientFilter, setPatientFilter] = useState('todos');
+  const [periodFilter, setPeriodFilter] = useState('12');
 
   useEffect(() => {
     const loadReportsData = async () => {
       try {
         const data = await mockApi.getReportsData(user.id);
+        setOriginalData(data);
         setReportsData(data);
       } catch (error) {
         console.error('Erro ao carregar dados dos relatórios:', error);
@@ -27,6 +31,42 @@ export const Relatorios = () => {
     };
     loadReportsData();
   }, [user.id]);
+
+  const applyFilters = () => {
+    if (!originalData) return;
+
+    let filteredData = { ...originalData };
+
+    // Filtro de período
+    const monthsToShow = parseInt(periodFilter);
+    filteredData.frequencyData = originalData.frequencyData.slice(-monthsToShow);
+
+    // Recalcular estatísticas baseado no período
+    const totalSessionsInPeriod = filteredData.frequencyData.reduce((sum, month) => sum + month.sessions, 0);
+    
+    // Filtro de pacientes
+    let patientMultiplier = 1;
+    if (patientFilter === 'ativos') {
+      patientMultiplier = 0.8; // 80% dos pacientes são ativos
+    } else if (patientFilter === 'novos') {
+      patientMultiplier = 0.3; // 30% são novos pacientes
+    }
+
+    filteredData.stats = {
+      ...originalData.stats,
+      activePatients: Math.round(originalData.stats.activePatients * patientMultiplier),
+      totalSessions: totalSessionsInPeriod || originalData.stats.totalSessions,
+      attendanceRate: patientFilter === 'novos' ? 
+        Math.max(65, originalData.stats.attendanceRate - 10) : 
+        originalData.stats.attendanceRate
+    };
+
+    setReportsData(filteredData);
+  };
+
+  useEffect(() => {
+    applyFilters();
+  }, [patientFilter, periodFilter, originalData]);
 
   if (loading) return <LoadingSpinner size="lg" />;
   if (!reportsData) return <div>Erro ao carregar dados</div>;
@@ -68,18 +108,30 @@ export const Relatorios = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-dark font-secondary">Período de Análise</h3>
-                <p className="text-sm text-medium mt-1 font-body">Últimos 12 meses - Dados atualizados em tempo real</p>
+                <p className="text-sm text-medium mt-1 font-body">
+                  {patientFilter === 'todos' ? 'Todos os pacientes' : 
+                   patientFilter === 'ativos' ? 'Apenas pacientes ativos' : 'Apenas novos pacientes'} • 
+                  Últimos {periodFilter} meses - Dados atualizados em tempo real
+                </p>
               </div>
               <div className="flex items-center gap-4">
-                <select className="input-field px-3 py-2 rounded-lg text-sm text-dark focus:ring-light">
-                  <option>Todos os pacientes</option>
-                  <option>Pacientes ativos</option>
-                  <option>Novos pacientes</option>
+                <select 
+                  value={patientFilter}
+                  onChange={(e) => setPatientFilter(e.target.value)}
+                  className="input-field px-3 py-2 rounded-lg text-sm text-dark focus:ring-light"
+                >
+                  <option value="todos">Todos os pacientes</option>
+                  <option value="ativos">Pacientes ativos</option>
+                  <option value="novos">Novos pacientes</option>
                 </select>
-                <select className="input-field px-3 py-2 rounded-lg text-sm text-dark focus:ring-light">
-                  <option>Últimos 12 meses</option>
-                  <option>Últimos 6 meses</option>
-                  <option>Últimos 3 meses</option>
+                <select 
+                  value={periodFilter}
+                  onChange={(e) => setPeriodFilter(e.target.value)}
+                  className="input-field px-3 py-2 rounded-lg text-sm text-dark focus:ring-light"
+                >
+                  <option value="12">Últimos 12 meses</option>
+                  <option value="6">Últimos 6 meses</option>
+                  <option value="3">Últimos 3 meses</option>
                 </select>
               </div>
             </div>
@@ -168,121 +220,72 @@ export const Relatorios = () => {
                       <span className="text-dark font-semibold">{stats.activePatients > 0 ? Math.round(stats.totalSessions / stats.activePatients) : 0}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-medium font-body">Taxa de comparecimento</span>
+                      <span className="text-medium font-body">Taxa de conclusão</span>
                       <span className="text-green-600 font-semibold">{stats.attendanceRate}%</span>
                     </div>
                   </div>
                 </div>
-                
-                <div className="glassmorphism p-6">
-                  <h3 className="text-lg font-semibold text-dark mb-4 font-secondary">Tendências</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-green-600" />
-                      <span className="text-medium font-body">Crescimento de pacientes</span>
-                      <span className="text-green-600 font-semibold">+12%</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Activity className="w-4 h-4 text-blue-600" />
-                      <span className="text-medium font-body">Engajamento</span>
-                      <span className="text-blue-600 font-semibold">Alto</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Target className="w-4 h-4 text-yellow-600" />
-                      <span className="text-medium font-body">Meta mensal</span>
-                      <span className="text-yellow-600 font-semibold">85%</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="glassmorphism p-6">
-                  <h3 className="text-lg font-semibold text-dark mb-4 font-secondary">Próximas Ações</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-light rounded-full mt-2"></div>
-                      <span className="text-medium text-sm font-body">Revisar casos de alta prioridade</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
-                      <span className="text-medium text-sm font-body">Agendar sessões de acompanhamento</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                      <span className="text-medium text-sm font-body">Atualizar planos de tratamento</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Gráficos */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                <div className="glassmorphism">
-                  <div className="p-6 border-b border-white/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-light rounded-lg flex items-center justify-center">
-                        <BarChart3 className="w-5 h-5 text-white" />
-                      </div>
-                      <h2 className="text-lg font-semibold text-dark font-secondary">Frequência de Sessões</h2>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={frequencyData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#8569E4" opacity={0.3} />
-                        <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#6B39BC' }} />
-                        <YAxis tick={{ fontSize: 12, fill: '#6B39BC' }} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: '#510993'
-                          }}
-                        />
-                        <Bar dataKey="sessions" fill="#8569E4" radius={[4, 4, 0, 0]} />
+                <div className="glassmorphism p-6">
+                  <h3 className="text-lg font-semibold text-dark mb-4 font-secondary">Frequência de Sessões</h3>
+                  <div className="h-32">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={frequencyData.slice(-6)}>
+                        <Bar dataKey="sessions" fill="#2493BF" />
+                        <Tooltip />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
-                <div className="glassmorphism">
-                  <div className="p-6 border-b border-white/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-light rounded-lg flex items-center justify-center">
-                        <Activity className="w-5 h-5 text-white" />
-                      </div>
-                      <h2 className="text-lg font-semibold text-dark font-secondary">Status das Sessões</h2>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <ResponsiveContainer width="100%" height={300}>
+                <div className="glassmorphism p-6">
+                  <h3 className="text-lg font-semibold text-dark mb-4 font-secondary">Status das Sessões</h3>
+                  <div className="h-32">
+                    <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
                           data={statusData}
                           cx="50%"
                           cy="50%"
-                          outerRadius={80}
+                          outerRadius={40}
+                          fill="#8884d8"
                           dataKey="value"
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
-                          labelLine={false}
                         >
-                          {statusData?.map((entry, index) => (
+                          {statusData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: '#510993'
-                          }}
-                        />
+                        <Tooltip />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
               </div>
+
+              {/* Alertas de Risco */}
+              {riskAlerts.length > 0 && (
+                <div className="glassmorphism p-6 mb-12">
+                  <h3 className="text-lg font-semibold text-dark mb-4 font-secondary flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
+                    Alertas de Risco
+                  </h3>
+                  <div className="space-y-3">
+                    {riskAlerts.map((alert, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                        <div>
+                          <p className="font-medium text-dark">{alert.patient}</p>
+                          <p className="text-sm text-gray-600">{alert.reason}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          alert.risk === 'Alto' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {alert.risk}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
