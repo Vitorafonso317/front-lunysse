@@ -22,7 +22,7 @@ return (
                 <div className="flex items-center space-x-3 md:space-x-4">
                     <div className="relative">
                         <img
-                            src="/logo.png"
+                            src="/logo sem fundo.png"
                             alt="logotipo site lunysse"
                             className="w-10 h-10 md:w-12 md:h-12 shadow-lg"/>
                         <div className="absolute inset-1 bg-gradient-to-r from-light to-accent rounded-xl blur opacity-30 md:rounded-b-xl"></div>

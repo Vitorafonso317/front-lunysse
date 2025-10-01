@@ -98,7 +98,7 @@ export const Sidebar = () => {
              SEÇÃO DO LOGO
              ============================== */}
           <div className="flex items-center space-x-3 p-6 border-b border-white/10">
-            <img src="/logo.png" alt="Lunysse" className="w-10 h-10 rounded-lg" />
+            <img src="/logo sem fundo.png" alt="Lunysse" className="w-10 h-10 rounded-lg" />
             <div>
               <span className="text-xl font-bold text-white">Lunysse</span>
               <p className="text-xs text-white/60">Sistema Psicológico</p>

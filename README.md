@@ -2,7 +2,7 @@
 
 Sistema web moderno para gestão de consultas psicológicas, desenvolvido com React 19 + Vite, focado em atendimentos voluntários em universidades, ONGs e projetos sociais.
 
-![Lunysse Logo](public/logo.png)
+![Lunysse Logo](public/logo%20sem%20fundo.png)
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](CHANGELOG.md)
 [![React](https://img.shields.io/badge/React-19.1.1-61dafb.svg)](https://reactjs.org/)
@@ -17,7 +17,6 @@ Sistema web moderno para gestão de consultas psicológicas, desenvolvido com Re
 - [Instalação](#instalação)
 - [Uso](#uso)
 - [Estrutura do Projeto](#estrutura-do-projeto)
-- [Modelo de Dados](#modelo-de-dados)
 - [API Mock](#api-mock)
 - [Chat com IA](#chat-com-ia)
 - [Componentes](#componentes)
@@ -29,6 +28,14 @@ Sistema web moderno para gestão de consultas psicológicas, desenvolvido com Re
 ## 🎯 Sobre o Projeto
 
 O **Lunysse** é uma plataforma web desenvolvida para facilitar o agendamento e gestão de consultas psicológicas em ambientes de atendimento voluntário. O sistema oferece interfaces diferenciadas para psicólogos e pacientes, com foco na experiência do usuário e eficiência operacional.
+
+### Identidade Visual
+
+O projeto conta com uma identidade visual completa:
+- **Logo**: Símbolo da marca em versões com e sem fundo
+- **Logotipo**: Marca completa com nome em versões com e sem fundo
+- **Formatos**: Disponível em PNG e SVG para máxima qualidade
+- **Aplicação**: Usado na sidebar, navbar e documentação
 
 ### Objetivos
 
@@ -47,9 +54,9 @@ O **Lunysse** é uma plataforma web desenvolvida para facilitar o agendamento e 
 - **Detalhes do Paciente**: Histórico de sessões, anotações e relatórios
 - **Gestão de Sessões**: Edição de status, anotações e relatórios clínicos
 - **Chat com IA**: Assistente especializada em psicologia clínica
-- **Relatórios e Analytics**: Gráficos de frequência, status e alertas de risco
+- **Relatórios e Analytics**: Gráficos de frequência, status e alertas de risco com filtros funcionais
 - **Solicitações**: Gerenciamento de pedidos de novos pacientes
-- **Modal de Confirmação**: Confirmação de logout com "Deseja realmente sair?"
+- **Exportação PDF**: Relatórios profissionais em PDF
 
 ### 👤 Para Pacientes
 
@@ -79,6 +86,9 @@ O **Lunysse** é uma plataforma web desenvolvida para facilitar o agendamento e 
 - **Recharts 3.2.1** - Gráficos e visualizações
 - **React Hot Toast 2.6.0** - Notificações
 - **@huggingface/inference 4.8.0** - Integração com IA
+- **jsPDF 3.0.3** - Geração de PDFs
+- **html2canvas 1.4.1** - Captura de elementos DOM
+- **dom-to-image-more 3.7.1** - Conversão DOM para imagem
 
 ### Persistência
 - **LocalStorage** - Armazenamento local dos dados
@@ -142,16 +152,33 @@ http://localhost:5173
 3. **Navegação**: Use a sidebar para acessar diferentes seções
 4. **Agendamento** (Pacientes): Escolha psicólogo, data e horário
 5. **Gestão** (Psicólogos): Gerencie pacientes e sessões
-6. **Logout**: Confirmação com modal "Deseja realmente sair?"
+6. **Relatórios**: Use filtros para analisar dados específicos
+7. **Logout**: Confirmação com modal "Deseja realmente sair?"
 
 ## 📁 Estrutura do Projeto
 
 ```
+public/
+├── logo com fundo.png   # Logo Lunysse com fundo
+├── logo com fundo.svg   # Logo Lunysse com fundo (SVG)
+├── logo sem fundo.png   # Logo Lunysse sem fundo
+├── logo sem fundo.svg   # Logo Lunysse sem fundo (SVG)
+├── logotipo com fundo.png # Logotipo completo com fundo
+├── logotipo com fundo.svg # Logotipo completo com fundo (SVG)
+├── logotipo sem fundo.png # Logotipo completo sem fundo
+└── logotipo sem fundo.svg # Logotipo completo sem fundo (SVG)
+
 src/
+├── assets/              # Recursos estáticos
+│   ├── About/          # Imagens da página sobre
+│   ├── Home/           # Imagens da página inicial
+│   └── react.svg       # Logo do React
 ├── components/          # Componentes reutilizáveis
+│   ├── AvailabilityPicker.jsx # Seletor de disponibilidade
 │   ├── Button.jsx      # Botão customizado com variantes
 │   ├── Card.jsx        # Container com glassmorphism
 │   ├── ConfirmModal.jsx # Modal de confirmação
+│   ├── handleExportPDF.jsx # Função de exportação PDF
 │   ├── Input.jsx       # Input com validação
 │   ├── LoadingSpinner.jsx # Spinner de carregamento
 │   ├── MarkdownRenderer.jsx # Renderizador de markdown para IA
@@ -172,14 +199,14 @@ src/
 │   ├── Home.jsx        # Página inicial pública
 │   ├── Login.jsx       # Login padrão
 │   ├── Mensagens.jsx   # Sistema de mensagens
-│   ├── NovaConsulta.jsx # Nova consulta
 │   ├── NotFound.jsx    # Página 404 personalizada
+│   ├── NovaConsulta.jsx # Nova consulta
 │   ├── PacienteDetalhe.jsx # Detalhes e histórico do paciente
 │   ├── Pacientes.jsx   # Lista de pacientes (psicólogos)
 │   ├── PerfilPaciente.jsx # Perfil do paciente
 │   ├── PerfilPsicologo.jsx # Perfil do psicólogo
 │   ├── Register.jsx    # Cadastro de usuários
-│   ├── Relatorios.jsx  # Relatórios e analytics (psicólogos)
+│   ├── Relatorios.jsx  # Relatórios e analytics com filtros
 │   ├── SessaoDetalhes.jsx # Detalhes e gestão de sessões
 │   └── Solicitacoes.jsx # Solicitações de novos pacientes
 ├── routes/             # Configuração de rotas
@@ -372,7 +399,7 @@ Navbar para páginas públicas.
 - `/perfil-paciente` - Perfil do paciente
 - `/perfil-psicologo` - Perfil do psicólogo
 - `/chat-ia` - Chat com IA (apenas psicólogos)
-- `/relatorios` - Relatórios (apenas psicólogos)
+- `/relatorios` - Relatórios com filtros (apenas psicólogos)
 - `/solicitacoes` - Solicitações (apenas psicólogos)
 - `/pacientes` - Lista de pacientes (apenas psicólogos)
 - `/pacientes/:id` - Detalhes do paciente
@@ -384,7 +411,9 @@ Navbar para páginas públicas.
 
 - **KPIs Dinâmicos**: Calculados em tempo real
 - **Gráficos Interativos**: Recharts para visualizações
+- **Filtros Funcionais**: Por tipo de paciente e período
 - **Alertas de Risco**: Baseados em padrões de comportamento
+- **Exportação PDF**: Relatórios profissionais em PDF
 - **Dados Históricos**: Análise temporal de sessões
 
 ### Gestão de Solicitações
@@ -451,21 +480,22 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 - ✅ Dashboard para psicólogos e pacientes
 - ✅ Gestão de pacientes e sessões
 - ✅ Chat com IA especializada
-- ✅ Relatórios e analytics
+- ✅ Relatórios e analytics com filtros funcionais
 - ✅ Sistema de solicitações
 - ✅ Interface responsiva
 - ✅ Modal de confirmação de logout
 - ✅ Detalhes de sessões com edição
+- ✅ Exportação de relatórios em PDF
 
 ## 📞 Contato
 
 - **Desenvolvedor**: Vitor Afonso
-- **GitHub**: https://github.com/Vitorafonso317/front-lunysse
+- **GitHub**: https://github.com/vitor-afonso/lunysse-sistema-psicologico
 
 ---
 
 <div align="center">
   <p>Desenvolvido com ❤️ para facilitar o acesso à saúde mental</p>
   <p><strong>Lunysse v1.0.0 - Sistema de Agendamento Psicológico</strong></p>
-  <p>React 19 • Vite 7 • Tailwind CSS 4 • Hugging Face AI</p>
+  <p>React 19 • Vite 7 • Tailwind CSS 4 • Hugging Face AI • jsPDF</p>
 </div>
