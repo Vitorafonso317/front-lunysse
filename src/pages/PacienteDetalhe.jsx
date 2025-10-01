@@ -6,7 +6,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { Input } from '../components/Input';
-import { ArrowLeft, Users, Mail, Phone, Calendar, Activity, CheckCircle, Clock, Eye, Plus } from 'lucide-react';
+import { ArrowLeft, Users, Mail, Phone, Calendar, Activity, CheckCircle, Clock, Eye, Plus, } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const PatientInfo = ({ patient }) => {
