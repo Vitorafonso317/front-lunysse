@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Heart, Brain, Shield, Users, Calendar, Activity, FileText, Zap, Target, Award } from 'lucide-react';
 import { Card } from '../components/Card';
 
+import Misabout from "../assets/About/MisAbout.png"; 
 import MisAbout from "../assets/About/MisAbout.png"; 
 import VisAbout from "../assets/About/VisAbout.png";
 import ValAbout from "../assets/About/ValAbout.png";
@@ -79,9 +80,9 @@ export const About = () => {
           transition={{ duration: 1 }}
           className="max-w-4xl mx-auto text-center"
         >
-          {/* LOGOTIPO: Representativo da empresa */}
-          <div className="w-48 h-48 mx-auto mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-            <img src="/logotipo sem fundo.png" alt="Lunysse" className="w-full h-full object-contain transform scale-150" />
+          {/* ÍCONE: Representativo da empresa */}
+          <div className="w-24 h-24 bg-medium rounded-full flex items-center justify-center mx-auto mb-8">
+            <Heart className="w-12 h-12 text-white" />
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-dark mb-6 tracking-tight">
             Sobre o <span className="text-medium">Lunysse</span>
@@ -114,6 +115,7 @@ export const About = () => {
               <Card className="p-8 h-full flex flex-col">
                 {/* IMAGEM: Ícone ou ilustração sobre missão */}
                 <div className="w-full h-32 mb-6">
+                  <img src={Misabout} alt="Nossa Missão" className="w-full h-full object-cover rounded-lg" />
                   <img src={MisAbout} alt="Nossa Missão" className="w-full h-full object-cover rounded-lg" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4 tracking-tight">Nossa Missão</h2>
@@ -268,5 +270,5 @@ export const About = () => {
         </motion.div>
       </section>
     </div>
-  );
-};
+  )
+}
