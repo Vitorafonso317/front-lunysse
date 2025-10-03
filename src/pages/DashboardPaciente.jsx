@@ -18,7 +18,8 @@ import {
   User,
   Star,
   ArrowRight,
-  Activity
+  Activity,
+  X
 } from 'lucide-react';
 
 const fadeInUp = {
@@ -41,24 +42,23 @@ export const DashboardPaciente = () => {
   const [appointments, setAppointments] = useState([]);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [expandedRequest, setExpandedRequest] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [requestsData] = await Promise.all([
-          mockApi.getRequests(),
+        const [requestsData, appointmentsData] = await Promise.all([
+          mockApi.getPatientRequests(user.email),
+          mockApi.getAppointmentsByEmail(user.email)
         ]);
         
-        const userRequests = requestsData.filter(req => req.patientEmail === user.email);
-        setRequests(userRequests);
-        
-        const allAppointments = await mockApi.getAppointmentsByEmail(user.email);
-        setAppointments(allAppointments);
+        setRequests(requestsData);
+        setAppointments(appointmentsData);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
         setLoading(false);
-        // Dados carregados
       }
     };
 
@@ -115,10 +115,109 @@ export const DashboardPaciente = () => {
         <div className="flex items-center gap-3">
           {requests.length > 0 && (
             <div className="relative">
-              <Bell className="w-6 h-6 text-medium" />
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {requests.length}
-              </span>
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 text-medium hover:text-dark transition-colors"
+              >
+                <Bell className="w-6 h-6" />
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {requests.length}
+                </span>
+              </button>
+              
+              {showNotifications && (
+                <div className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-lg border z-50 max-h-96 overflow-y-auto">
+                  <div className="p-4 border-b">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-gray-800">Notificações</h3>
+                      <button
+                        onClick={() => setShowNotifications(false)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="max-h-80 overflow-y-auto">
+                    {requests.map(request => {
+                      const statusInfo = getStatusInfo(request.status);
+                      const StatusIcon = statusInfo.icon;
+                      
+                      return (
+                        <div key={request.id} className="p-4 border-b hover:bg-gray-50">
+                          <div className="flex items-start gap-3">
+                            <StatusIcon className="w-5 h-5 text-blue-500 mt-1" />
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-1">
+                                <h4 className="font-medium text-sm text-gray-800">
+                                  Solicitação de Atendimento
+                                </h4>
+                                <span className={`px-2 py-1 rounded-full text-xs ${statusInfo.color}`}>
+                                  {statusInfo.text}
+                                </span>
+                              </div>
+                              <p className="text-xs text-gray-600 mb-1">
+                                Enviada em {new Date(request.createdAt).toLocaleDateString('pt-BR')}
+                              </p>
+                              <p className="text-sm text-gray-700 mb-3">{request.description}</p>
+                              
+                              {request.status === 'aceito' && (
+                                <div className="space-y-2">
+                                  <div className="p-2 bg-green-50 rounded text-xs text-green-800">
+                                    Parabéns! Você foi aceito como paciente.
+                                  </div>
+                                  {request.notes && (
+                                    <div>
+                                      <button
+                                        onClick={() => setExpandedRequest(expandedRequest === request.id ? null : request.id)}
+                                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                                      >
+                                        {expandedRequest === request.id ? 'Ocultar resposta' : 'Ver resposta do psicólogo'}
+                                      </button>
+                                      {expandedRequest === request.id && (
+                                        <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-800">
+                                          <strong>Resposta:</strong> {request.notes}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                              
+                              {request.status === 'pendente' && (
+                                <div className="p-2 bg-blue-50 rounded text-xs text-blue-800">
+                                  Sua solicitação está sendo analisada.
+                                </div>
+                              )}
+                              
+                              <div className="mt-3 flex gap-2">
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await mockApi.markRequestAsRead(request.id);
+                                      const updatedRequests = requests.filter(r => r.id !== request.id);
+                                      setRequests(updatedRequests);
+                                      if (updatedRequests.length === 0) {
+                                        setShowNotifications(false);
+                                      }
+                                    } catch (error) {
+                                      console.error('Erro ao marcar como lida:', error);
+                                    }
+                                  }}
+                                  className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300"
+                                >
+                                  Marcar como lida
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

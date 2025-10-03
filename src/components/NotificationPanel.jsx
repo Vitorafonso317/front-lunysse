@@ -5,13 +5,11 @@
 // Aparece apenas no dashboard do psicólogo como um dropdown
 
 import { useState } from 'react';
-import { useRequest } from './ToastContext'; // Hook para acessar mensagens
-import { Bell, X, MessageCircle } from 'lucide-react'; // Ícones
+import { useRequest } from './ToastContext';
+import { Bell, X, MessageCircle } from 'lucide-react';
 
 export const NotificationPanel = () => {
-    // Obtém mensagens e funções do contexto
     const { requests, removeRequest, handleAction } = useRequest();
-    // Estado para controlar se o painel está aberto ou fechado
     const [isOpen, setIsOpen] = useState(false);
 
     // Conta quantas mensagens não lidas existem
@@ -22,12 +20,7 @@ export const NotificationPanel = () => {
         removeRequest(requestId);
     };
 
-    // Função para responder mensagem
-    const handleReply = (requestId) => {
-        // TODO: Implementar lógica de resposta (abrir modal, redirecionar, etc.)
-        console.log('Responder mensagem:', requestId);
-        removeRequest(requestId); // Remove da lista após responder
-    };
+
 
     // Renderização do painel de notificações
     return (
@@ -102,13 +95,6 @@ export const NotificationPanel = () => {
                                             <p className="text-sm text-gray-700 mb-3">{request.message}</p>
                                             {/* Botões de ação */}
                                             <div className="flex gap-2">
-                                                {/* Botão para responder */}
-                                                <button
-                                                    onClick={() => handleReply(request.id)}
-                                                    className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                                                >
-                                                    Responder
-                                                </button>
                                                 {/* Botão para marcar como lida */}
                                                 <button
                                                     onClick={() => handleMarkAsRead(request.id)}
@@ -125,6 +111,8 @@ export const NotificationPanel = () => {
                     </div>
                 </div>
             )}
+
+
         </div>
     );
 };

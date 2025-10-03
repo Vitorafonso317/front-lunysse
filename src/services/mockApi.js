@@ -15,7 +15,8 @@ const STORAGE_KEYS = {
   USERS: 'lunysse_users',           // Usuários do sistema (psicólogos e pacientes)
   PATIENTS: 'lunysse_patients',     // Dados detalhados dos pacientes
   APPOINTMENTS: 'lunysse_appointments', // Agendamentos e sessões
-  REQUESTS: 'lunysse_requests'      // Solicitações de novos pacientes
+  REQUESTS: 'lunysse_requests',     // Solicitações de novos pacientes
+  MESSAGES: 'lunysse_messages'      // Mensagens entre psicólogos e pacientes
 };
 
 /**
@@ -179,6 +180,18 @@ const initialPatients = [
     psychologistId: 3 
   },
   
+  // Paciente de teste Maria Santos (ID: 5) - Associado à Dra. Ana Costa
+  { 
+    id: 5, 
+    name: 'Maria Santos', 
+    email: 'paciente@test.com', 
+    phone: '(11) 99999-0001', 
+    birthDate: '1995-05-15', 
+    age: 29, 
+    status: 'Em tratamento', 
+    psychologistId: 2 
+  },
+  
   // Pacientes da Dra. Lucia Ferreira (ID: 4) - Especialista em Terapia Familiar
   { 
     id: 13, 
@@ -266,6 +279,21 @@ const initialRequests = [
     preferredTimes: ['09:00', '10:00'],
     status: 'pendente',
     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 dia atrás
+  },
+  {
+    id: 3,
+    patientName: 'Maria Santos',
+    patientEmail: 'paciente@test.com',
+    patientPhone: '(11) 99999-0001',
+    preferredPsychologist: 2, // Dra. Ana Costa (TCC)
+    description: 'Gostaria de continuar meu tratamento. Tenho sentido melhoras significativas e preciso de mais sessões.',
+    urgency: 'media',
+    preferredDates: ['2024-12-22', '2024-12-23'],
+    preferredTimes: ['14:00', '15:00'],
+    status: 'aceito',
+    notes: 'Olá Maria! Fico feliz em saber sobre suas melhoras. Aceito continuar seu tratamento. Entrarei em contato para agendarmos as próximas sessões.',
+    createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(), // 2 dias atrás
+    updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 dia atrás
   }
 ];
 
@@ -461,6 +489,9 @@ if (!localStorage.getItem(STORAGE_KEYS.APPOINTMENTS)) {
 }
 if (!localStorage.getItem(STORAGE_KEYS.REQUESTS)) {
   setStorageData(STORAGE_KEYS.REQUESTS, initialRequests);
+}
+if (!localStorage.getItem(STORAGE_KEYS.MESSAGES)) {
+  setStorageData(STORAGE_KEYS.MESSAGES, []);
 }
 
 /**
@@ -931,12 +962,58 @@ export const mockApi = {
     const requestIndex = currentRequests.findIndex(req => req.id === requestId);
     
     if (requestIndex !== -1) {
+      const request = currentRequests[requestIndex];
+      
+      // Atualiza a solicitação
       currentRequests[requestIndex] = {
-        ...currentRequests[requestIndex],
+        ...request,
         status,
         notes,
-        updatedAt: new Date().toISOString() // Marca quando foi atualizada
+        updatedAt: new Date().toISOString()
       };
+      
+      // Se aceito, cria/atualiza paciente automaticamente
+      if (status === 'aceito') {
+        const currentPatients = getStorageData(STORAGE_KEYS.PATIENTS, initialPatients);
+        const existingPatient = currentPatients.find(p => p.email === request.patientEmail);
+        
+        if (!existingPatient) {
+          // Calcula idade se tiver data de nascimento
+          const calculateAge = (birthDate) => {
+            if (!birthDate) return null;
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+              age--;
+            }
+            return age;
+          };
+          
+          // Cria novo paciente
+          const newPatient = {
+            id: Date.now(),
+            name: request.patientName,
+            email: request.patientEmail,
+            phone: request.patientPhone,
+            birthDate: request.birthDate || null,
+            age: request.birthDate ? calculateAge(request.birthDate) : null,
+            status: 'Ativo',
+            psychologistId: request.preferredPsychologist
+          };
+          
+          currentPatients.push(newPatient);
+          setStorageData(STORAGE_KEYS.PATIENTS, currentPatients);
+        } else {
+          // Atualiza paciente existente
+          const patientIndex = currentPatients.findIndex(p => p.email === request.patientEmail);
+          currentPatients[patientIndex].psychologistId = request.preferredPsychologist;
+          currentPatients[patientIndex].status = 'Ativo';
+          setStorageData(STORAGE_KEYS.PATIENTS, currentPatients);
+        }
+      }
+      
       setStorageData(STORAGE_KEYS.REQUESTS, currentRequests);
       return currentRequests[requestIndex];
     }
@@ -1007,6 +1084,81 @@ export const mockApi = {
     currentPatients.push(newPatient);
     setStorageData(STORAGE_KEYS.PATIENTS, currentPatients);
     return newPatient;
+  },
+
+  /**
+   * Envia mensagem entre psicólogo e paciente
+   * @param {Object} messageData - Dados da mensagem
+   * @returns {Object} Mensagem criada
+   */
+  async sendMessage(messageData) {
+    await delay(500);
+    const currentMessages = getStorageData(STORAGE_KEYS.MESSAGES, []);
+    const newMessage = {
+      id: Date.now(),
+      ...messageData,
+      timestamp: new Date().toISOString(),
+      read: false
+    };
+    currentMessages.push(newMessage);
+    setStorageData(STORAGE_KEYS.MESSAGES, currentMessages);
+    return newMessage;
+  },
+
+  /**
+   * Busca mensagens entre usuários específicos
+   * @param {number} userId - ID do usuário atual
+   * @param {string} userType - Tipo do usuário ('psicologo' ou 'paciente')
+   * @returns {Array} Lista de conversas
+   */
+  async getMessages(userId, userType) {
+    await delay(500);
+    const currentMessages = getStorageData(STORAGE_KEYS.MESSAGES, []);
+    return currentMessages.filter(msg => 
+      (userType === 'psicologo' && msg.psychologistId === userId) ||
+      (userType === 'paciente' && msg.patientId === userId)
+    ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  },
+
+  /**
+   * Marca mensagem como lida
+   * @param {number} messageId - ID da mensagem
+   * @returns {Object} Mensagem atualizada
+   */
+  async markMessageAsRead(messageId) {
+    await delay(200);
+    const currentMessages = getStorageData(STORAGE_KEYS.MESSAGES, []);
+    const messageIndex = currentMessages.findIndex(msg => msg.id === messageId);
+    if (messageIndex !== -1) {
+      currentMessages[messageIndex].read = true;
+      setStorageData(STORAGE_KEYS.MESSAGES, currentMessages);
+      return currentMessages[messageIndex];
+    }
+    throw new Error('Mensagem não encontrada');
+  },
+
+  /**
+   * Marca solicitação como lida (remove da lista de notificações)
+   * @param {number} requestId - ID da solicitação
+   * @returns {boolean} Sucesso da operação
+   */
+  async markRequestAsRead(requestId) {
+    await delay(200);
+    const currentRequests = getStorageData(STORAGE_KEYS.REQUESTS, initialRequests);
+    const updatedRequests = currentRequests.filter(req => req.id !== requestId);
+    setStorageData(STORAGE_KEYS.REQUESTS, updatedRequests);
+    return true;
+  },
+
+  /**
+   * Busca solicitações de um paciente específico pelo email
+   * @param {string} patientEmail - Email do paciente
+   * @returns {Array} Lista de solicitações do paciente
+   */
+  async getPatientRequests(patientEmail) {
+    await delay(300);
+    const currentRequests = getStorageData(STORAGE_KEYS.REQUESTS, initialRequests);
+    return currentRequests.filter(req => req.patientEmail === patientEmail);
   }
 };
 

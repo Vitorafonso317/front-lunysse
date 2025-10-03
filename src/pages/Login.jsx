@@ -44,11 +44,8 @@ export const Login = () => {
           className="hidden lg:block space-y-8"
         >
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-medium rounded-2xl flex items-center justify-center">
-                <Heart className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-black text-dark">Lunysse</h1>
+            <div className="w-64 h-40 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+              <img src="/logotipo sem fundo.png" alt="Lunysse" className="w-full h-full object-contain transform scale-125" />
             </div>
             
             <div className="space-y-4">
@@ -93,8 +90,8 @@ export const Login = () => {
           <Card className="p-8 md:p-10 backdrop-blur-xl bg-white/80 border border-white/20">
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
-              <div className="w-16 h-16 bg-medium rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-8 h-8 text-white" />
+              <div className="w-52 h-32 mx-auto mb-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-md">
+                <img src="/logotipo sem fundo.png" alt="Lunysse" className="w-full h-full object-contain transform scale-125" />
               </div>
               <h1 className="text-2xl font-black text-dark mb-2">Entrar</h1>
               <p className="text-dark/70 font-light">Acesse sua conta no Lunysse</p>

@@ -102,7 +102,7 @@ export const Button = ({
       // ===== ESTADO DISABLED =====
       // UX: Previne cliques durante loading
       // ACESSIBILIDADE: Screen readers identificam estado
-      disabled={loading}
+      disabled={props.disabled || loading}
       
       // ===== PROPS FORWARDING =====
       // FLEXIBILIDADE: Permite todas as props nativas de button

@@ -79,9 +79,9 @@ export const About = () => {
           transition={{ duration: 1 }}
           className="max-w-4xl mx-auto text-center"
         >
-          {/* ÍCONE: Representativo da empresa */}
-          <div className="w-24 h-24 bg-medium rounded-full flex items-center justify-center mx-auto mb-8">
-            <Heart className="w-12 h-12 text-white" />
+          {/* LOGOTIPO: Representativo da empresa */}
+          <div className="w-48 h-48 mx-auto mb-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+            <img src="/logotipo sem fundo.png" alt="Lunysse" className="w-full h-full object-contain transform scale-150" />
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-dark mb-6 tracking-tight">
             Sobre o <span className="text-medium">Lunysse</span>

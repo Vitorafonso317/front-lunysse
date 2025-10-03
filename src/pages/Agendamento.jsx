@@ -171,24 +171,21 @@ export const Agendamento = () => {
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { value: 'baixa', label: 'Baixa', desc: 'Posso aguardar algumas semanas', color: 'green' },
-                  { value: 'media', label: 'Média', desc: 'Gostaria de iniciar em breve', color: 'yellow' },
-                  { value: 'alta', label: 'Alta', desc: 'Preciso de atendimento urgente', color: 'red' }
+                  { value: 'baixa', label: 'Baixa', desc: 'Posso aguardar algumas semanas', color: 'bg-green-500', border: 'border-green-500' },
+                  { value: 'media', label: 'Média', desc: 'Gostaria de iniciar em breve', color: 'bg-yellow-500', border: 'border-yellow-500' },
+                  { value: 'alta', label: 'Alta', desc: 'Preciso de atendimento urgente', color: 'bg-red-500', border: 'border-red-500' }
                 ].map(option => (
                   <div
                     key={option.value}
                     onClick={() => setRequestData({...requestData, urgency: option.value})}
                     className={`glassmorphism-light p-4 cursor-pointer transition-all border-2 ${
                       requestData.urgency === option.value
-                        ? `border-${option.color}-500`
+                        ? option.border
                         : 'border-transparent hover:border-white/30'
                     }`}
                   >
                     <div className="text-center">
-                      <div className={`w-4 h-4 rounded-full mx-auto mb-2 ${
-                        option.color === 'green' ? 'bg-green-500' :
-                        option.color === 'yellow' ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}></div>
+                      <div className={`w-4 h-4 rounded-full mx-auto mb-2 ${option.color}`}></div>
                       <div className="font-medium text-dark font-secondary">{option.label}</div>
                       <div className="text-sm text-medium mt-1 font-body">{option.desc}</div>
                     </div>

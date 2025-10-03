@@ -53,13 +53,16 @@ export const Sidebar = () => {
         { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
         { to: '/solicitacoes', label: 'Solicitações', icon: Bell },
         { to: '/pacientes', label: 'Pacientes', icon: Users },
+        { to: '/mensagens', label: 'Mensagens', icon: MessageCircle },
         { to: '/chat-ia', label: 'Chat IA', icon: MessageCircle },
         { to: '/relatorios', label: 'Relatórios', icon: BarChart3 }
       ]
     : [
         // Links específicos para PACIENTES
         { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-        { to: '/agendamento', label: 'Solicitar Sessão', icon: Calendar }
+        { to: '/agendamento', label: 'Solicitar Sessão', icon: Calendar },
+        { to: '/mensagens', label: 'Mensagens', icon: MessageCircle },
+        { to: '/historico', label: 'Histórico', icon: Calendar }
       ];
 
   /* ==============================
@@ -98,7 +101,7 @@ export const Sidebar = () => {
              SEÇÃO DO LOGO
              ============================== */}
           <div className="flex items-center space-x-3 p-6 border-b border-white/10">
-            <img src="/logo sem fundo.png" alt="Lunysse" className="w-10 h-10 rounded-lg" />
+            <img src="/logotipo sem fundo.png" alt="Lunysse" className="w-24 h-24 rounded-lg" />
             <div>
               <span className="text-xl font-bold text-white">Lunysse</span>
               <p className="text-xs text-white/60">Sistema Psicológico</p>
